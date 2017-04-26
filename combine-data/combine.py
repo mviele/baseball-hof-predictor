@@ -83,42 +83,54 @@ def main():
         else:
             df.loc[p, 'LastYear'] = int(df_master.loc[p, 'finalGame'][:4])
 
-    df_ineligable = df[df['LastYear'] >= 2011]
-    df_eligable = df[df['LastYear'] < 2011]
+    df_undetermined = df[df['LastYear'] >= 2011]
+    df_determined = df[df['LastYear'] < 2011]
 
-    for p in df_eligable.index:
-        if int(df_eligable.loc[p, 'LastYear']) <= 1961:
-            df_eligable.loc[p, 'CyYoung'] = np.nan
+    for p in df_determined.index:
+        if int(df_determined.loc[p, 'LastYear']) <= 1961:
+            df_determined.loc[p, 'CyYoung'] = np.nan
 
-    for p in df_eligable.index:
-        if int(df_eligable.loc[p, 'LastYear']) <= 1960:
-            df_eligable.loc[p, 'WorldSeriesMVP'] = np.nan
+    for p in df_determined.index:
+        if int(df_determined.loc[p, 'LastYear']) <= 1960:
+            df_determined.loc[p, 'WorldSeriesMVP'] = np.nan
 
-    for p in df_eligable.index:
-        if int(df_eligable.loc[p, 'LastYear']) <= 1962:
-            df_eligable.loc[p, 'GoldGlove'] = np.nan
+    for p in df_determined.index:
+        if int(df_determined.loc[p, 'LastYear']) <= 1962:
+            df_determined.loc[p, 'GoldGlove'] = np.nan
     
-    for p in df_eligable.index:
-        if int(df_eligable.loc[p, 'LastYear']) <= 1916:
-            df_eligable.loc[p, 'MVP'] = np.nan
+    for p in df_determined.index:
+        if int(df_determined.loc[p, 'LastYear']) <= 1916:
+            df_determined.loc[p, 'MVP'] = np.nan
     
-    for p in df_eligable.index:
-        if int(df_eligable.loc[p, 'LastYear']) <= 1938:
-            df_eligable.loc[p, 'AllStar'] = np.nan
+    for p in df_determined.index:
+        if int(df_determined.loc[p, 'LastYear']) <= 1938:
+            df_determined.loc[p, 'AllStar'] = np.nan
+    
+    # Move Roger Clemens, Trevor Hoffman, Mike Mussina, and Curt Schilling 
+    # from train to test, since they are all still on the ballot and could be elected
+    # at a latter date
+    df_undetermined.loc['clemero02'] = df_determined.loc['clemero02']
+    df_undetermined.loc['hoffmtr01'] = df_determined.loc['hoffmtr01']
+    df_undetermined.loc['mussimi01'] = df_determined.loc['mussimi01']
+    df_undetermined.loc['schilcu01'] = df_determined.loc['schilcu01']
 
-    df_ineligable.drop('HOF', axis=1, inplace=True)
+    df_undetermined.sort_index(inplace=True)
+
+    df_determined.drop(['clemero02', 'hoffmtr01', 'mussimi01', 'schilcu01'], inplace=True)
+
+    df_undetermined.drop('HOF', axis=1, inplace=True)
 
     # We may want to leave this in, but for now we will drop this
-    df_ineligable.drop('LastYear', axis=1, inplace=True)
-    df_eligable.drop('LastYear', axis=1, inplace=True)
+    df_undetermined.drop('LastYear', axis=1, inplace=True)
+    df_determined.drop('LastYear', axis=1, inplace=True)
 
     print("Hall of Fame pitchers")
     print(df.loc[df['HOF'] == 1])
-    df_eligable.to_csv("combined_stats_train.csv")
-    df_eligable.to_csv("../predictor/combined_stats_train.csv")
+    df_determined.to_csv("combined_stats_train.csv")
+    df_determined.to_csv("../predictor/combined_stats_train.csv")
 
-    df_ineligable.to_csv("combined_stats_test.csv")
-    df_ineligable.to_csv("../predictor/combined_stats_test.csv")
+    df_undetermined.to_csv("combined_stats_test.csv")
+    df_undetermined.to_csv("../predictor/combined_stats_test.csv")
 
 
 
