@@ -42,10 +42,14 @@ def main():
                 objective='binary:logistic', seed=seed)
 
     print ('Reading data...')
-    X_train = pd.read_csv('combined_stats.csv', sep=',', header=0)
+    X_train = pd.read_csv('combined_stats_train.csv', sep=',', header=0)
     X_train = X_train.set_index('playerID')
     y_train = X_train.ix[:,'HOF']
     X_train.drop('HOF', axis=1, inplace=True)
+
+    X_test = pd.read_csv('combined_stats_test.csv', sep=',', header=0)
+    X_test = X_test.set_index('playerID')
+    id_test = X_test.index.values
     
 
     print ('')
@@ -77,11 +81,11 @@ def main():
     print ('AUC: ' + str(mean_auc))
 
 
-    # print ('Training...')
-    # print ('Bagging parameters:')
-    # print ('    Number of trees: %d' % (num_trees))
-    # preds = estimator_bagging(model, X_train, y_train, X_test)
-    # make_submission('SubmissionBagging37', id_test, preds)
+    print ('Training...')
+    print ('Bagging parameters:')
+    print ('    Number of trees: %d' % (num_trees))
+    preds = estimator_bagging(model, X_train, y_train, X_test)
+    make_submission('predictions', id_test, preds)
 
     print ('')
     print ('Program complete!')
