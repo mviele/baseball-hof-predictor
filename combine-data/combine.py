@@ -16,11 +16,24 @@ def main():
 
     df_row_count = df.shape[0]
     df['HOF'] = np.zeros((df_row_count,), dtype=np.int)
+
+    cols = df.columns.tolist()
+    cols = cols[-1:] + cols[:-1]
+    df = df[cols]
+
     df['AllStar'] = np.zeros((df_row_count,), dtype=np.int)
     df['MVP'] = np.zeros((df_row_count,), dtype=np.int)
     df['CyYoung'] = np.zeros((df_row_count,), dtype=np.int)
     df['WorldSeriesMVP'] = np.zeros((df_row_count,), dtype=np.int)
     df['GoldGlove'] = np.zeros((df_row_count,), dtype=np.int)
+
+    df_master = pd.read_csv('Master.csv', header=0)
+    df_master = df_master.set_index('playerID')
+
+    for p in df.index:
+        if int(df_master.ix[p, 'finalGame'][:4]) >= 2011 or pd.isnull(df_master.ix[p, 'finalGame']):
+            df.drop(p)
+
 
     df_hof = pd.read_csv('HallOfFame.csv', header=0)
     df_mem = df_hof.loc[df_hof['inducted'] == 'Y']
@@ -36,8 +49,7 @@ def main():
         if p in df.index:
             df.ix[p, 'AllStar'] += 1
             
-    df_master = pd.read_csv('Master.csv', header=0)
-    df_master = df_master.set_index('playerID')
+    
     for p in df.index:
         if int(df_master.ix[p, 'finalGame'][:4]) <= 1938:
             df.ix[p, 'AllStar'] = np.nan
@@ -85,9 +97,10 @@ def main():
         if int(df_master.ix[p, 'finalGame'][:4]) <= 1962:
             df.ix[p, 'GoldGlove'] = np.nan
 
-
+    print("Hall of Fame pitchers")
     print(df.loc[df['HOF'] == 1])
     df.to_csv("combined_stats.csv")
+    df.to_csv("../predictor/combined_stats.csv")
 
 
 
