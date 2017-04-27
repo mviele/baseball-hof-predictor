@@ -16,7 +16,7 @@ def main():
     df['Name'] = np.zeros((df_row_count,), dtype=np.int).astype(str)
 
     for p in df.index:
-        df.loc[p, 'Name'] = df_master.loc[p, 'nameGiven'] + ' ' + df_master.loc[p, 'nameLast']
+        df.loc[p, 'Name'] = df_master.loc[p, 'nameFirst'] + ' ' + df_master.loc[p, 'nameLast']
     
     df.to_csv('player_stats.csv')
         
