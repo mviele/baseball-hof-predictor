@@ -21,6 +21,8 @@ def main():
     cols = cols[-1:] + cols[:-1]
     df = df[cols]
 
+    df.to_csv("player_stats.csv")    
+
     df['LastYear'] = np.zeros((df_row_count,), dtype=np.int)
     df['AllStar'] = np.zeros((df_row_count,), dtype=np.int)
     df['MVP'] = np.zeros((df_row_count,), dtype=np.int)
