@@ -62,6 +62,15 @@ def main():
     df = X_train.loc[X_train['HOF'] == 1]
     avg_games = math.floor(df['G'].mean())
     print("Average number of games played by HOFer: "+str(avg_games))
+
+    avg_wins = math.floor(df['W'].mean())
+    print("Average games won by HOFer: "+str(avg_wins))
+
+    avg_era = df['ERA'].mean()
+    print("Average ERA of HOFer: "+str(avg_era))
+
+    avg_allstar = math.floor(df['AllStar'].mean())
+    print("Average All-Star games played by HOFer: "+str(avg_allstar))
     X_train = X_train.set_index('playerID')
     y_train = X_train.ix[:,'HOF']
     X_train.drop('HOF', axis=1, inplace=True)

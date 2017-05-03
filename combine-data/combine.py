@@ -23,13 +23,22 @@ def main():
 
     # df.to_csv("player_stats.csv")    
 
+    
     df['LastYear'] = np.zeros((df_row_count,), dtype=np.int)
     df['AllStar'] = np.zeros((df_row_count,), dtype=np.int)
     df['MVP'] = np.zeros((df_row_count,), dtype=np.int)
     df['CyYoung'] = np.zeros((df_row_count,), dtype=np.int)
     df['WorldSeriesMVP'] = np.zeros((df_row_count,), dtype=np.int)
     df['GoldGlove'] = np.zeros((df_row_count,), dtype=np.int)
+    df['Steroid'] = np.zeros((df_row_count,), dtype=np.int)
 
+    for p in df.index:
+        if df.loc[p, 'Mitchell-Report'] > 0 or df.loc[p, 'Positive-Test'] > 0:
+            df.loc[p, 'Steroid'] = 1
+    
+    df.drop('Mitchell-Report', axis=1, inplace=True)
+    df.drop('Positive-Test', axis=1, inplace=True)
+        
     df_master = pd.read_csv('Master.csv', header=0)
     df_master = df_master.set_index('playerID')
 
