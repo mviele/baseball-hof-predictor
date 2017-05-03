@@ -20,8 +20,17 @@ def main():
     
     df.to_csv('player_stats.csv')
         
+def make_cols():
+    df = pd.read_csv('player_stats.csv', header=0)
+
+    df.set_index('playerID', inplace=True)
+    
+    df_row_count = df.shape[0]
+    df['Mitchell-Report'] = np.zeros((df_row_count,), dtype=np.int).astype(str)
+    df['Positive-Test'] = np.zeros((df_row_count,), dtype=np.int).astype(str)
+    
+    df.to_csv('player_stats_steroids.csv')
 
 
 
-
-main()
+make_cols()

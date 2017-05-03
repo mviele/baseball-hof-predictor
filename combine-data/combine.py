@@ -5,23 +5,23 @@ import numpy as np
 
 
 def main():
-    df_init = pd.read_csv('Pitching.csv', header=0)
+    df = pd.read_csv('player_stats_steroids.csv', header=0)
 
-    df = df_init.drop(['yearID', 'stint', 'teamID', 'lgID', 'ERA', 'BAOpp', 'GIDP'], axis=1, inplace=False)
+    # df = df_init.drop(['yearID', 'stint', 'teamID', 'lgID', 'ERA', 'BAOpp', 'GIDP'], axis=1, inplace=False)
     df = df.set_index('playerID')
-    df = df.groupby(df.index).sum()
-    df = df[df['G'] >= 50]
-    df['ERA'] = (df['ER'] * 27) / df['IPouts']
+    # df = df.groupby(df.index).sum()
+    # df = df[df['G'] >= 50]
+    # df['ERA'] = (df['ER'] * 27) / df['IPouts']
 
 
     df_row_count = df.shape[0]
-    df['HOF'] = np.zeros((df_row_count,), dtype=np.int)
+    # df['HOF'] = np.zeros((df_row_count,), dtype=np.int)
 
-    cols = df.columns.tolist()
-    cols = cols[-1:] + cols[:-1]
-    df = df[cols]
+    # cols = df.columns.tolist()
+    # cols = cols[-1:] + cols[:-1]
+    # df = df[cols]
 
-    df.to_csv("player_stats.csv")    
+    # df.to_csv("player_stats.csv")    
 
     df['LastYear'] = np.zeros((df_row_count,), dtype=np.int)
     df['AllStar'] = np.zeros((df_row_count,), dtype=np.int)
@@ -111,20 +111,23 @@ def main():
     # Move Roger Clemens, Trevor Hoffman, Mike Mussina, and Curt Schilling 
     # from train to test, since they are all still on the ballot and could be elected
     # at a latter date
-    df_undetermined.loc['clemero02'] = df_determined.loc['clemero02']
-    df_undetermined.loc['hoffmtr01'] = df_determined.loc['hoffmtr01']
-    df_undetermined.loc['mussimi01'] = df_determined.loc['mussimi01']
-    df_undetermined.loc['schilcu01'] = df_determined.loc['schilcu01']
+    # df_undetermined.loc['clemero02'] = df_determined.loc['clemero02']
+    # df_undetermined.loc['hoffmtr01'] = df_determined.loc['hoffmtr01']
+    # df_undetermined.loc['mussimi01'] = df_determined.loc['mussimi01']
+    # df_undetermined.loc['schilcu01'] = df_determined.loc['schilcu01']
 
-    df_undetermined.sort_index(inplace=True)
+    # df_undetermined.sort_index(inplace=True)
 
-    df_determined.drop(['clemero02', 'hoffmtr01', 'mussimi01', 'schilcu01'], inplace=True)
+    # df_determined.drop(['clemero02', 'hoffmtr01', 'mussimi01', 'schilcu01'], inplace=True)
 
     df_undetermined.drop('HOF', axis=1, inplace=True)
 
     # We may want to leave this in, but for now we will drop this
     df_undetermined.drop('LastYear', axis=1, inplace=True)
     df_determined.drop('LastYear', axis=1, inplace=True)
+
+    df_undetermined.drop('Name', axis=1, inplace=True)
+    df_determined.drop('Name', axis=1, inplace=True)
 
     print("Hall of Fame pitchers")
     print(df.loc[df['HOF'] == 1])
